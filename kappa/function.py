@@ -58,6 +58,10 @@ class Function(object):
         return None
 
     @property
+    def followlinks(self):
+        return self._config.get('follow_links', False)
+
+    @property
     def runtime(self):
         return self._config['runtime']
 
@@ -247,7 +251,7 @@ class Function(object):
         relroot = os.path.abspath(lambda_dir)
         with zipfile.ZipFile(zipfile_name, 'a',
                              compression=zipfile.ZIP_DEFLATED) as zf:
-            for root, subdirs, files in os.walk(lambda_dir):
+            for root, subdirs, files in os.walk(lambda_dir, followlinks=self.followlinks):
                 excluded_dirs = []
                 for subdir in subdirs:
                     for excluded in self.excluded_dirs:
